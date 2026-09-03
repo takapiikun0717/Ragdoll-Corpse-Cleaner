@@ -1,0 +1,80 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+}
+
+version = '1.0.0'
+group = 'com.addon.ragdollcleanup'
+base {
+    archivesName = 'ragdollcorpsecleaner'
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
+minecraft {
+    mappings channel: 'official', version: '1.20.1'
+
+    // ragdollified本体のjarはSRG(intermediary)ではなく公式マッピング前提で書いているので
+    // 開発時はForgeGradleの通常のrun設定でOK
+    runs {
+        client {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                ragdollcorpsecleaner {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+            property 'forge.logging.markers', 'REGISTRIES'
+            property 'forge.logging.console.level', 'debug'
+            mods {
+                ragdollcorpsecleaner {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+// ragdollifiedのjarをコンパイル時の依存として読み込む(libs/に本体jarを置く)
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.20.1-47.4.10'
+
+    // libs/ に置いた ragdollified-1_20_1-1_0_0-RELEASE.jar をコンパイル時のAPI参照専用に使う。
+    // ragdollifiedは公式マッピング(official mappings)でビルド・配布されているMOD本体jarなので
+    // deobf不要でそのままcompileOnly参照でOK。
+    // 実行時(サーバー/クライアント)は本物のragdollified modを別途mods導入する必要がある。
+    compileOnly files('libs/ragdollified-1_20_1-1_0_0-RELEASE.jar')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+jar {
+    manifest {
+        attributes([
+            'Specification-Title'   : 'ragdollcorpsecleaner',
+            'Specification-Vendor'  : 'addon',
+            'Specification-Version' : '1',
+            'Implementation-Title'  : project.name,
+            'Implementation-Version': project.jar.archiveVersion,
+            'Implementation-Vendor' : 'addon'
+        ])
+    }
+}
