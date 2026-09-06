@@ -9,8 +9,9 @@ version = "${file.jarVersion}"
 displayName = "Ragdoll Corpse Cleaner"
 authors = "takapii_kun0717"
 description = '''
-ragdollified 用のアドオンMOD。
-/ragdollified clear コマンドで、ラグドール化されたモブの死体をまとめて削除できるようにします。
+ragdollified / ragdollifiedpc 用のアドオンMOD。
+/ragdollified clear でモブのラグドール死体を、
+/ragdollified clearcorpses でプレイヤーの死体をまとめて削除できるようにします。
 '''
 
 [[dependencies.ragdollcorpsecleaner]]
@@ -32,5 +33,19 @@ ragdollified 用のアドオンMOD。
     modId = "ragdollified"
     mandatory = true
     versionRange = "[1.0.0,)"
+    ordering = "AFTER"
+    side = "BOTH"
+
+# プレイヤー死体の削除機能(CorpseEntity/PendingCorpseStore)を使うため
+# ragdollifiedpc も必須依存として明記する。
+# ragdollifiedpcは "0.1.1-BETA" のように末尾にサフィックスが付くバージョン表記のため、
+# 特定バージョン以上を指定する書き方([0.1.1,)など)だと弾かれてしまう。
+# また versionRange を省略/空文字にしてもForge側では「任意のバージョンを許可」とは
+# 扱われず、依然としてマッチ失敗してしまうことが判明したため、
+# Forge公式で「実質無制限(0以上)」を意味する有効な範囲指定 "[0,)" を明示する。
+[[dependencies.ragdollcorpsecleaner]]
+    modId = "ragdollifiedpc"
+    mandatory = true
+    versionRange = "[0,)"
     ordering = "AFTER"
     side = "BOTH"

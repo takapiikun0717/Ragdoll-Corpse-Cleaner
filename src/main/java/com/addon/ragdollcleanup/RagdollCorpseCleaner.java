@@ -1,5 +1,6 @@
 package com.addon.ragdollcleanup;
 
+import com.addon.ragdollcleanup.command.PlayerCorpseClearCommand;
 import com.addon.ragdollcleanup.command.RagdollClearCommand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -9,9 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * ragdollified (by raiiiden) 用のアドオンMOD。
- * ragdollifiedが公開しているサーバーAPI (RagdollifiedApi) を利用して、
- * ラグドール化されたモブの死体をコマンドで削除できるようにする。
+ * ragdollified / ragdollifiedpc (by raiiiden) 用のアドオンMOD。
+ * ragdollifiedが公開しているサーバーAPI (RagdollifiedApi) や、
+ * ragdollifiedpcのCorpseEntity/PendingCorpseStoreを利用して、
+ * ラグドール化されたモブの死体・プレイヤーの死体をコマンドで削除できるようにする。
  */
 @Mod(RagdollCorpseCleaner.MOD_ID)
 public class RagdollCorpseCleaner {
@@ -27,6 +29,7 @@ public class RagdollCorpseCleaner {
     @SubscribeEvent
     public void onRegisterCommands(RegisterCommandsEvent event) {
         RagdollClearCommand.register(event.getDispatcher());
-        LOGGER.info("[RagdollCorpseCleaner] /ragdollified clear コマンドを登録しました。");
+        PlayerCorpseClearCommand.register(event.getDispatcher());
+        LOGGER.info("[RagdollCorpseCleaner] /ragdollified clear / clearcorpses コマンドを登録しました。");
     }
 }

@@ -5,7 +5,7 @@ plugins {
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
-version = '1.0.0'
+version = '1.5.0'
 group = 'com.addon.ragdollcleanup'
 base {
     archivesName = 'ragdollcorpsecleaner'
@@ -55,11 +55,12 @@ repositories {
 dependencies {
     minecraft 'net.minecraftforge:forge:1.20.1-47.4.10'
 
-    // libs/ に置いた ragdollified-1_20_1-1_0_0-RELEASE.jar をコンパイル時のAPI参照専用に使う。
-    // ragdollifiedは公式マッピング(official mappings)でビルド・配布されているMOD本体jarなので
+    // libs/ に置いた本体jar群をコンパイル時のAPI参照専用に使う。
+    // どちらも公式マッピング(official mappings)でビルド・配布されているMOD本体jarなので
     // deobf不要でそのままcompileOnly参照でOK。
-    // 実行時(サーバー/クライアント)は本物のragdollified modを別途mods導入する必要がある。
+    // 実行時(サーバー/クライアント)は本物のragdollified / ragdollifiedpc modを別途mods導入する必要がある。
     compileOnly files('libs/ragdollified-1_20_1-1_0_0-RELEASE.jar')
+    compileOnly files('libs/ragdollifiedpc-1_20_1-0_1_1-BETA.jar')
 }
 
 tasks.withType(JavaCompile).configureEach {
