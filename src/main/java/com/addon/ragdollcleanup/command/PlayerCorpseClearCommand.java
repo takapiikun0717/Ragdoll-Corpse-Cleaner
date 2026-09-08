@@ -2,21 +2,17 @@ package com.addon.ragdollcleanup.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.raiiiden.ragdollifiedpc.entity.CorpseEntity;
 import com.raiiiden.ragdollifiedpc.entity.ModEntities;
 import com.raiiiden.ragdollifiedpc.server.PendingCorpseStore;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,9 +34,10 @@ import java.util.UUID;
  * リフレクションを使わずに正規の方法でアクセスしている。
  *
  * 使い方:
- *   /ragdollified clearcorpses            ... 現在読み込まれている全プレイヤー死体を削除
- *   /ragdollified clearcorpses <targets>  ... 指定したエンティティのうちプレイヤー死体のみ削除
- *   /ragdollified countcorpses            ... 現在読み込まれているプレイヤー死体の数を表示
+ *   /ragdollified clearcorpses  ... 現在読み込まれている全プレイヤー死体を削除
+ *   /ragdollified countcorpses  ... 現在読み込まれているプレイヤー死体の数を表示
+ *
+ * ※ セレクタ(<targets>)による個別指定には対応していない(全削除のみ)。
  *
  * 注意: level.getEntities() はそのレベルで現在読み込まれている(ロード済みチャンク内の)
  * エンティティのみを対象とする。アンロードされたチャンクにある死体はチャンクが
@@ -65,9 +62,7 @@ public final class PlayerCorpseClearCommand {
             Commands.literal("ragdollified")
                 .then(Commands.literal("clearcorpses")
                     .requires(source -> source.hasPermission(PERMISSION_LEVEL))
-                    .executes(PlayerCorpseClearCommand::clearAll)
-                    .then(Commands.argument("targets", EntityArgument.entities())
-                        .executes(PlayerCorpseClearCommand::clearTargets)))
+                    .executes(PlayerCorpseClearCommand::clearAll))
                 .then(Commands.literal("countcorpses")
                     .requires(source -> source.hasPermission(PERMISSION_LEVEL))
                     .executes(PlayerCorpseClearCommand::count))
@@ -93,30 +88,6 @@ public final class PlayerCorpseClearCommand {
             source.sendSuccess(() -> Component.literal("§7削除できるプレイヤーの死体はありませんでした。"), true);
         } else {
             source.sendSuccess(() -> Component.literal("§aプレイヤーの死体を " + removedCount + " 体削除しました。"), true);
-        }
-        return removedCount;
-    }
-
-    /** セレクタで指定したエンティティのうち、プレイヤー死体であるものだけ削除する。 */
-    private static int clearTargets(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {
-        Collection<? extends Entity> targets = EntityArgument.getEntities(ctx, "targets");
-
-        int removed = 0;
-        for (Entity entity : targets) {
-            if (entity instanceof CorpseEntity corpse) {
-                ServerLevel level = (ServerLevel) corpse.level();
-                removeCorpse(level, corpse);
-                removed++;
-            }
-        }
-
-        final int removedCount = removed;
-        CommandSourceStack source = ctx.getSource();
-        if (removedCount == 0) {
-            source.sendSuccess(() -> Component.literal("§7指定した対象にプレイヤーの死体はありませんでした。"), true);
-        } else {
-            source.sendSuccess(() ->
-                Component.literal("§a指定した対象のうち " + removedCount + " 体のプレイヤーの死体を削除しました。"), true);
         }
         return removedCount;
     }
