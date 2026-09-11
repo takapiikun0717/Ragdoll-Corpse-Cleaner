@@ -1,0 +1,9 @@
+{
+  "commands.ragdollcorpsecleaner.clear.none": "削除できるモブの死体はありませんでした。",
+  "commands.ragdollcorpsecleaner.clear.success": "モブの死体を %s 体削除しました。",
+  "commands.ragdollcorpsecleaner.count": "現在アクティブなモブの死体: %s 体",
+
+  "commands.ragdollcorpsecleaner.clearcorpses.none": "削除できるプレイヤーの死体はありませんでした。",
+  "commands.ragdollcorpsecleaner.clearcorpses.success": "プレイヤーの死体を %s 体削除しました。",
+  "commands.ragdollcorpsecleaner.countcorpses": "現在読み込まれているプレイヤーの死体: %s 体"
+}

@@ -1,3 +1,9 @@
 1.0.0 初回リリース
 
 1.5.0 Ragdollified Player Corpsesのプレイヤーの死体を消すコマンドを追加
+
+1.6.0 セレクター機能を削除
+
+1.6.5 Ragdollified Player Corpsesを任意に変更
+      サーバーでも/ragdollified clear,/ragdollified countを実行できるように変更
+      英語と日本語に対応

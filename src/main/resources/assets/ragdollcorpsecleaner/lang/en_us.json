@@ -1,0 +1,9 @@
+{
+  "commands.ragdollcorpsecleaner.clear.none": "There were no ragdoll corpses to remove.",
+  "commands.ragdollcorpsecleaner.clear.success": "Removed %s ragdoll corpse(s).",
+  "commands.ragdollcorpsecleaner.count": "Currently active ragdoll corpses: %s",
+
+  "commands.ragdollcorpsecleaner.clearcorpses.none": "There were no player corpses to remove.",
+  "commands.ragdollcorpsecleaner.clearcorpses.success": "Removed %s player corpse(s).",
+  "commands.ragdollcorpsecleaner.countcorpses": "Currently loaded player corpses: %s"
+}

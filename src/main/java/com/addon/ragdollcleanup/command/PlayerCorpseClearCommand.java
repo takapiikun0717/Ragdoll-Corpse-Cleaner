@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.raiiiden.ragdollifiedpc.entity.CorpseEntity;
 import com.raiiiden.ragdollifiedpc.entity.ModEntities;
 import com.raiiiden.ragdollifiedpc.server.PendingCorpseStore;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -38,6 +39,9 @@ import java.util.UUID;
  *   /ragdollified countcorpses  ... 現在読み込まれているプレイヤー死体の数を表示
  *
  * ※ セレクタ(<targets>)による個別指定には対応していない(全削除のみ)。
+ *
+ * メッセージ文言は assets/ragdollcorpsecleaner/lang/*.json で管理している
+ * (バニラ同様、翻訳キーを介して言語ファイルから読み込む方式)。
  *
  * 注意: level.getEntities() はそのレベルで現在読み込まれている(ロード済みチャンク内の)
  * エンティティのみを対象とする。アンロードされたチャンクにある死体はチャンクが
@@ -85,9 +89,13 @@ public final class PlayerCorpseClearCommand {
         final int removedCount = removed;
         CommandSourceStack source = ctx.getSource();
         if (removedCount == 0) {
-            source.sendSuccess(() -> Component.literal("§7削除できるプレイヤーの死体はありませんでした。"), true);
+            source.sendSuccess(() ->
+                Component.translatable("commands.ragdollcorpsecleaner.clearcorpses.none")
+                    .withStyle(ChatFormatting.GRAY), true);
         } else {
-            source.sendSuccess(() -> Component.literal("§aプレイヤーの死体を " + removedCount + " 体削除しました。"), true);
+            source.sendSuccess(() ->
+                Component.translatable("commands.ragdollcorpsecleaner.clearcorpses.success", removedCount)
+                    .withStyle(ChatFormatting.GREEN), true);
         }
         return removedCount;
     }
@@ -102,7 +110,9 @@ public final class PlayerCorpseClearCommand {
         }
 
         final int totalCount = total;
-        ctx.getSource().sendSuccess(() -> Component.literal("§b現在読み込まれているプレイヤーの死体: " + totalCount + " 体"), false);
+        ctx.getSource().sendSuccess(() ->
+            Component.translatable("commands.ragdollcorpsecleaner.countcorpses", totalCount)
+                .withStyle(ChatFormatting.AQUA), false);
         return totalCount;
     }
 
